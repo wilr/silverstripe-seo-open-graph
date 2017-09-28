@@ -9,6 +9,19 @@
  * @version 1.0.0
  *
  */
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Tab;
+use SilverStripe\AssetAdmin\Forms\UploadField;
+use SilverStripe\Forms\LabelField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\ORM\DB;
+
 
 class SEO_OpenGraph_SiteTree_DataExtension extends DataExtension {
 
@@ -27,7 +40,7 @@ class SEO_OpenGraph_SiteTree_DataExtension extends DataExtension {
 		'OpenGraphData' => 'Text'
 	);
 	private static $has_one = array(
-		'OpenGraphImage' => 'Image',
+		'OpenGraphImage' => 'SilverStripe\Assets\Image',
 	);
 
 
@@ -56,9 +69,8 @@ class SEO_OpenGraph_SiteTree_DataExtension extends DataExtension {
 
 	// CMS Fields
 	public function updateCMSFields(FieldList $fields) {
-
-		// vars
 		$config = SiteConfig::current_site_config();
+
 		$owner = $this->owner;
 
 		// decode data into array
@@ -83,11 +95,7 @@ class SEO_OpenGraph_SiteTree_DataExtension extends DataExtension {
 		// add description
 		// type always visible
 		$fields->addFieldsToTab($tab, array(
-			// header
-			LabelField::create('OpenGraphHeader', '@todo Information</a>')
-				->addExtraClass('information'),
-			// type
-			DropdownField::create('OpenGraphType', '<a href="http://ogp.me/#types">og:type</a>', self::$types, $data['og:type']),
+			DropdownField::create('OpenGraphType', 'og:type', self::$types, $data['og:type'])->setDescription('<a href="http://ogp.me/#types">Types</a>'),
 		));
 
 		if ($data['og:type'] !== 'off') {
@@ -104,7 +112,7 @@ class SEO_OpenGraph_SiteTree_DataExtension extends DataExtension {
 				TextareaField::create('OpenGraphDescription', 'Description', $data['og:description'])
 					->setAttribute('placeholder', $owner->GenerateDescription()),
 				// image
-				UploadField::create('OpenGraphImage', 'Image<pre>type: png/jpg/gif</pre><pre>size: variable *</pre>', $owner->OpenGraphImage)
+				UploadField::create('OpenGraphImage', 'Image', $owner->OpenGraphImage)
 					->setAllowedExtensions(array('png', 'jpg', 'jpeg', 'gif'))
 					->setFolderName(self::$SEOOpenGraphUpload . $owner->Title)
 					->setDescription('* <a href="https://developers.facebook.com/docs/sharing/best-practices#images" target="_blank">Facebook image best practices</a>, or use any preferred Open Graph guide.'),
