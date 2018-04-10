@@ -12,7 +12,6 @@
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Tab;
-use SilverStripe\AssetAdmin\Forms\UploadField;
 use SilverStripe\Forms\LabelField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\TextField;
@@ -21,6 +20,8 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\SiteConfig\SiteConfig;
 use SilverStripe\ORM\DB;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\FileHandleField;
 
 
 class SEO_OpenGraph_SiteTree_DataExtension extends DataExtension {
@@ -112,10 +113,7 @@ class SEO_OpenGraph_SiteTree_DataExtension extends DataExtension {
 				TextareaField::create('OpenGraphDescription', 'Description', $data['og:description'])
 					->setAttribute('placeholder', $owner->GenerateDescription()),
 				// image
-				UploadField::create('OpenGraphImage', 'Image', $owner->OpenGraphImage)
-					->setAllowedExtensions(array('png', 'jpg', 'jpeg', 'gif'))
-					->setFolderName(self::$SEOOpenGraphUpload . $owner->Title)
-					->setDescription('* <a href="https://developers.facebook.com/docs/sharing/best-practices#images" target="_blank">Facebook image best practices</a>, or use any preferred Open Graph guide.'),
+				Injector::inst()->create(FileHandleField::class, 'Image')->setDescription('* <a href="https://developers.facebook.com/docs/sharing/best-practices#images" target="_blank">Facebook image best practices</a>, or use any preferred Open Graph guide.'),
 			));
 		}
 
