@@ -43,7 +43,9 @@ class SEO_OpenGraph_SiteTree_DataExtension extends DataExtension {
 	private static $has_one = array(
 		'OpenGraphImage' => 'SilverStripe\Assets\Image',
 	);
-
+	private static $owns = [
+		'OpenGraphImage'
+	];
 
 	/* Variables
 	------------------------------------------------------------------------------*/
@@ -113,7 +115,7 @@ class SEO_OpenGraph_SiteTree_DataExtension extends DataExtension {
 				TextareaField::create('OpenGraphDescription', 'Description', $data['og:description'])
 					->setAttribute('placeholder', $owner->GenerateDescription()),
 				// image
-				Injector::inst()->create(FileHandleField::class, 'Image')->setDescription('* <a href="https://developers.facebook.com/docs/sharing/best-practices#images" target="_blank">Facebook image best practices</a>, or use any preferred Open Graph guide.'),
+				Injector::inst()->create(FileHandleField::class, 'OpenGraphImage')->setDescription('* <a href="https://developers.facebook.com/docs/sharing/best-practices#images" target="_blank">Facebook image best practices</a>, or use any preferred Open Graph guide.'),
 			));
 		}
 
